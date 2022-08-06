@@ -7,6 +7,7 @@ use serenity::model::gateway::Ready;
 use serenity::model::voice::VoiceState;
 use serenity::prelude::*;
 use serenity::model::id::{ChannelId};
+use serenity::cache::{Cache};
 
 
 
@@ -40,16 +41,17 @@ impl EventHandler for Handler {
         println!("cache ready");
     }
 
-    
     async fn voice_state_update(&self, ctx: Context , _old: Option<VoiceState>, _new: VoiceState){
+
+        println!("{:?}",_new);
         
-        if let Some(v) = _new.member {
+        if let Some(joined_member) = _new.member {
            
-            println!("{}が通話を始めたよ",  v.user.name);
+            println!("{}が通話を始めたよ",  joined_member.user.name);
             let _channel_id: u64 = 1000298417001595010;
 
             let _text_channel :ChannelId = set_channel_id(_channel_id);
-            let _message: String = v.user.name + "が通話を始めたよ";
+            let _message: String = joined_member.user.name + "が通話を始めたよ";
             if let Err(why) =  _text_channel.say(&ctx.http, _message).await {
                 println!("Client error: {:?}", why);
             }
